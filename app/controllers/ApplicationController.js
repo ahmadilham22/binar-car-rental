@@ -1,4 +1,4 @@
-const NotFoundError = require("../errors");
+const { NotFoundError } = require("../errors");
 
 class ApplicationController {
   handleGetRoot = (req, res) => {

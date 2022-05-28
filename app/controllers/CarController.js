@@ -1,10 +1,12 @@
+const { Op } = require("sequelize");
 const ApplicationController = require("./ApplicationController");
-const { Car } = require("../models");
 
 class CarController extends ApplicationController {
-  constructor({ carModel = Car }) {
+  constructor({ carModel, userCarModel, dayjs }) {
     super();
     this.carModel = carModel;
+    this.userCarModel = userCarModel;
+    this.dayjs = dayjs;
   }
 
   handleListCars = async (req, res) => {
@@ -59,6 +61,46 @@ class CarController extends ApplicationController {
     }
   }
 
+  handleRentCar = async (req, res, next) => {
+    try {
+      let { rentStartedAt, rentEndedAt } = req.body;
+      const car = await this.getCarFromRequest(req)
+
+      if (!rentEndedAt) rentEndedAt = this.dayjs(rentStartedAt).add(1, "day");
+
+      const activeRent = await this.userCarModel.findOne({
+        where: {
+          carId: car.id,
+          rentStartedAt: {
+            [Op.gte]: rentStartedAt,
+          },
+          rentEndedAt: {
+            [Op.lte]: rentEndedAt, 
+          }
+        }
+      });
+
+      if (!!activeRent) {
+        const err = new CarAlreadyRentedError(car);
+        res.status(422).json(err)
+        return;
+      }
+
+      const userCar = await this.userCarModel.create({
+        userId: req.user.id,
+        carId: car.id,
+        rentStartedAt,
+        rentEndedAt,
+      });
+
+      res.status(201).json(userCar)
+    }
+
+    catch(err) {
+      next(err);
+    }
+  }
+
   handleUpdateCar = async (req, res) => {
     try {
       const {
@@ -101,20 +143,33 @@ class CarController extends ApplicationController {
   }
 
   getListQueryFromRequest(req) {
-    const { size } = req.query;
+    const { size, availableAt } = req.query;
     const offset = this.getOffsetFromRequest(req);
-    const limit = req.query.pageSize;
+    const limit = req.query.pageSize || 10;
     const where = {};
+    const include = {
+      model: this.userCarModel,
+      as: "userCar",
+      required: false,
+    }
 
     if (!!size) where.size = size;
+    if (!!availableAt) {
+      include.where = {
+        rentEndedAt: {
+          [Op.gte]: availableAt, 
+        }
+      }
+    }
 
     const query = {
+      include,
       where,
       limit,
       offset,
-    }
+    };
 
-    return where;
+    return query;
   }
 }
 

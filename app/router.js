@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const dayjs = require("dayjs");
 const bcrypt = require("bcryptjs");
 
 const {
@@ -12,16 +13,18 @@ const {
   User,
   Role,
   Car,
+  UserCar,
 } = require("./models");
 
 function apply(app) {
   const carModel = Car;
   const roleModel = Role;
   const userModel = User;
+  const userCarModel = UserCar;
 
   const applicationController = new ApplicationController();
   const authenticationController = new AuthenticationController({ bcrypt, jwt, roleModel, userModel, });
-  const carController = new CarController({ carModel, });
+  const carController = new CarController({ carModel, userCarModel, dayjs });
 
   const accessControl = authenticationController.accessControl;
 
@@ -29,6 +32,7 @@ function apply(app) {
 
   app.get("/v1/cars", carController.handleListCars);
   app.post("/v1/cars", authenticationController.authorize(accessControl.ADMIN), carController.handleCreateCar);
+  app.post("/v1/cars/:id/rent", authenticationController.authorize(accessControl.CUSTOMER), carController.handleRentCar);
   app.get("/v1/cars/:id", carController.handleGetCar);
   app.put("/v1/cars/:id", authenticationController.authorize(accessControl.ADMIN), carController.handleUpdateCar);
   app.delete("/v1/cars/:id", authenticationController.authorize(accessControl.ADMIN), carController.handleDeleteCar);
