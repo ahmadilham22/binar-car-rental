@@ -97,6 +97,7 @@
         "summary": "Who Am I",
         "description": "Retrieve current user info",
         "operationId": "whoami",
+        "security": [ { "BearerTokenAuth": [] } ],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -159,6 +160,7 @@
         "summary": "Create Car",
         "description": "Add new car on the database",
         "operationId": "createCar",
+        "security": [ { "BearerTokenAuth": [] } ],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -224,6 +226,7 @@
         "summary": "Delete Car",
         "description": "Remove existing car by id",
         "operationId": "deleteCar",
+        "security": [ { "BearerTokenAuth": [] } ],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -255,6 +258,7 @@
         "summary": "Update Car",
         "description": "Change car information",
         "operationId": "updateCar",
+        "security": [ { "BearerTokenAuth": [] } ],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -311,6 +315,7 @@
         "summary": "Rent Car",
         "description": "Rent a car",
         "operationId": "rentCar",
+        "security": [ { "BearerTokenAuth": [] } ],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -579,6 +584,13 @@
           }
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "BearerTokenAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization"
     }
   }
 }
