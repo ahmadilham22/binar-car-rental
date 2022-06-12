@@ -1,48 +1,47 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserCars', {
+    await queryInterface.createTable("UserCars", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       userId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Users',
+            tableName: "Users",
           },
-          key: 'id',
+          key: "id",
         },
       },
       carId: {
         type: Sequelize.INTEGER,
         references: {
           model: {
-            tableName: 'Cars',
+            tableName: "Cars",
           },
-          key: 'id',
+          key: "id",
         },
       },
       rentStartedAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       rentEndedAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserCars');
-  }
+    await queryInterface.dropTable("UserCars");
+  },
 };

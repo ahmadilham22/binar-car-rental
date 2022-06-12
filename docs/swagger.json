@@ -17,12 +17,8 @@
       "name": "Cars"
     }
   ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/v1/auth/login": {
       "post": {
@@ -53,9 +49,7 @@
             }
           }
         ],
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/v1/auth/register": {
@@ -87,9 +81,7 @@
             }
           }
         ],
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/v1/auth/whoami": {
@@ -97,7 +89,7 @@
         "summary": "Who Am I",
         "description": "Retrieve current user info",
         "operationId": "whoami",
-        "security": [ { "BearerTokenAuth": [] } ],
+        "security": [{ "BearerTokenAuth": [] }],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -112,9 +104,7 @@
             }
           }
         },
-        "tags": [
-          "Auth"
-        ]
+        "tags": ["Auth"]
       }
     },
     "/v1/cars": {
@@ -152,15 +142,13 @@
             "format": "int32"
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       },
       "post": {
         "summary": "Create Car",
         "description": "Add new car on the database",
         "operationId": "createCar",
-        "security": [ { "BearerTokenAuth": [] } ],
+        "security": [{ "BearerTokenAuth": [] }],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -185,9 +173,7 @@
             }
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       }
     },
     "/v1/cars/{id}": {
@@ -218,15 +204,13 @@
             "format": "int64"
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       },
       "delete": {
         "summary": "Delete Car",
         "description": "Remove existing car by id",
         "operationId": "deleteCar",
-        "security": [ { "BearerTokenAuth": [] } ],
+        "security": [{ "BearerTokenAuth": [] }],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -250,15 +234,13 @@
             "format": "int64"
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       },
       "put": {
         "summary": "Update Car",
         "description": "Change car information",
         "operationId": "updateCar",
-        "security": [ { "BearerTokenAuth": [] } ],
+        "security": [{ "BearerTokenAuth": [] }],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -305,9 +287,7 @@
             }
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       }
     },
     "/v1/cars/{id}/rent": {
@@ -315,7 +295,7 @@
         "summary": "Rent Car",
         "description": "Rent a car",
         "operationId": "rentCar",
-        "security": [ { "BearerTokenAuth": [] } ],
+        "security": [{ "BearerTokenAuth": [] }],
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -357,9 +337,7 @@
             }
           }
         ],
-        "tags": [
-          "Cars"
-        ]
+        "tags": ["Cars"]
       }
     }
   },

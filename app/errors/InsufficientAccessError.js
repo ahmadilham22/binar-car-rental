@@ -9,8 +9,8 @@ class InsufficientAccessError extends ApplicationError {
   get details() {
     return {
       role: this.role,
-      reason: `${this.role} is not allowed to perform this operation.`
-    }
+      reason: `${this.role} is not allowed to perform this operation.`,
+    };
   }
 }
 
