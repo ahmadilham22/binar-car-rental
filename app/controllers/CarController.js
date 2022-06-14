@@ -37,9 +37,7 @@ class CarController extends ApplicationController {
 
   handleCreateCar = async (req, res) => {
     try {
-      const {
-        name, price, size, image,
-      } = req.body;
+      const { name, price, size, image } = req.body;
 
       const car = await this.carModel.create({
         name,
@@ -62,10 +60,12 @@ class CarController extends ApplicationController {
 
   handleRentCar = async (req, res, next) => {
     try {
-      let { rentStartedAt, rentEndedAt } = req.body;
+      const { rentStartedAt } = req.body;
+      let { rentEndedAt } = req.body;
       const car = await this.getCarFromRequest(req);
 
       if (!rentEndedAt) rentEndedAt = this.dayjs(rentStartedAt).add(1, "day");
+      if (!rentStartedAt) throw new Error("rentStartedAt must not be empty!!");
 
       const activeRent = await this.userCarModel.findOne({
         where: {
@@ -92,6 +92,17 @@ class CarController extends ApplicationController {
         rentEndedAt,
       });
 
+      await this.carModel.update(
+        {
+          isCurrentlyRented: true,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+
       res.status(201).json(userCar);
     } catch (err) {
       next(err);
@@ -100,21 +111,29 @@ class CarController extends ApplicationController {
 
   handleUpdateCar = async (req, res) => {
     try {
-      const {
-        name, price, size, image,
-      } = req.body;
+      const { name, price, size, image } = req.body;
 
-      const car = this.getCarFromRequest(req);
+      const car = await this.getCarFromRequest(req);
 
-      await car.update({
-        name,
-        price,
-        size,
-        image,
-        isCurrentlyRented: false,
+      const newCar = await this.carModel.update(
+        {
+          name,
+          price,
+          size,
+          image,
+          isCurrentlyRented: false,
+        },
+        {
+          where: {
+            id: car.id,
+          },
+        }
+      );
+
+      res.status(201).json({
+        message: "succesfully updated",
+        data: await this.getCarFromRequest(req),
       });
-
-      res.status(200).json(car);
     } catch (err) {
       res.status(422).json({
         error: {
@@ -126,12 +145,18 @@ class CarController extends ApplicationController {
   };
 
   handleDeleteCar = async (req, res) => {
-    const car = await this.carModel.destroy(req.params.id);
-    res.status(204).end();
+    const car = await this.carModel.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(201).json({
+      message: req.params.id,
+    });
   };
 
-  getCarFromRequest(req) {
-    return this.carModel.findByPk(req.params.id);
+  async getCarFromRequest(req) {
+    return await this.carModel.findByPk(req.params.id);
   }
 
   getListQueryFromRequest(req) {
